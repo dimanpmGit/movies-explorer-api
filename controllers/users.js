@@ -5,9 +5,9 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const { SALT_ROUNDS } = require('../utils/constants');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
-const AuthError = require('../errors/auth-error');
 const ConflictError = require('../errors/conflict-error');
 const ValidationError = require('../errors/validation-error');
+const AuthError = require('../errors/auth-error');
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
@@ -64,19 +64,7 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  return User.findOne({ email }).select('+password')
-    .then((user) => {
-      if (!user) {
-        return Promise.reject(new AuthError('Неправильные почта или пароль'));
-      }
-      return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            return Promise.reject(new AuthError('Неправильные почта или пароль'));
-          }
-          return user;
-        });
-    })
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.cookie('jwt', token, {
@@ -93,7 +81,16 @@ const login = (req, res, next) => {
 };
 
 const signout = (req, res, next) => {
-  console.log(res.cookie('jwt'));
+  const { email } = req.body;
+  return User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new AuthError('Неправильные почта или пароль'));
+      }
+      res.clearCookie('jwt');
+      return res.redirect('/');
+    })
+    .catch(next);
 };
 
 module.exports = {

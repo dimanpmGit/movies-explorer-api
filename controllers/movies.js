@@ -10,7 +10,12 @@ const getAllMovies = (req, res, next) => {
 const getUserMovies = (req, res, next) => {
   const ownerId = req.user._id;
   Movie.find({ owner: ownerId }).sort({ createdAt: -1 })
-    .then((movie) => res.send(movie))
+    .then((movie) => {
+      if (movie.length === 0) {
+        res.send({ message: 'Сохраненных фильмов нет' });
+      }
+      res.send(movie);
+    })
     .catch(next);
 };
 
@@ -22,7 +27,7 @@ const createMovie = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
@@ -36,7 +41,7 @@ const createMovie = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     thumbnail,
     owner,
     movieId,

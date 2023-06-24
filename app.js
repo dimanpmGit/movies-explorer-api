@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const { errors } = require('celebrate');
 const rateLimit = require('express-rate-limit');
@@ -33,6 +34,7 @@ const limiter = rateLimit({
 });
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(requestLogger); // подключаем логгер запросов
 app.use(limiter);
 app.get('/crash-test', () => {
@@ -54,7 +56,7 @@ app.post('/signout', signout);
 app.use('/*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {});
+mongoose.connect('mongodb://127.0.0.1:27017/bitfilmdb', {});
 
 app.use(errorLogger); // подключаем логгер ошибок
 
