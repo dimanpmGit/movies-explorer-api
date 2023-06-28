@@ -3,6 +3,14 @@ const jwt = require('jsonwebtoken');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const { SALT_ROUNDS } = require('../utils/constants');
+const {
+  MSG_GOODBYE,
+  MSG_USER_NOT_FOUND,
+  MSG_USER_WRONG_ID,
+  MSG_USER_DUBLICATE,
+  MSG_USER_WRONG_DATA,
+  MSG_USER_WRONG_MAIL_OR_PSSWD,
+} = require('../utils/constants');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const ConflictError = require('../errors/conflict-error');
@@ -13,7 +21,7 @@ const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(MSG_USER_NOT_FOUND);
       }
       return res.status(200).send(user);
     })
@@ -25,7 +33,7 @@ const updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь с указанным id не найден');
+        throw new NotFoundError(MSG_USER_WRONG_ID);
       }
       return res.send(user);
     })
@@ -53,9 +61,9 @@ const createUser = (req, res, next) => {
       }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
+        next(new ConflictError(MSG_USER_DUBLICATE));
       } else if (err.name === 'ValidationError') {
-        next(new ValidationError('Переданы некорректные данные в методы пользователя'));
+        next(new ValidationError(MSG_USER_WRONG_DATA));
       } else {
         next(err);
       }
@@ -85,10 +93,10 @@ const signout = (req, res, next) => {
   return User.findOne({ email })
     .then((user) => {
       if (!user) {
-        return Promise.reject(new AuthError('Неправильные почта или пароль'));
+        return Promise.reject(new AuthError(MSG_USER_WRONG_MAIL_OR_PSSWD));
       }
       res.clearCookie('jwt');
-      return res.redirect('/');
+      return res.send(MSG_GOODBYE);
     })
     .catch(next);
 };

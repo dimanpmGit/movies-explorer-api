@@ -3,35 +3,37 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 require('dotenv').config();
 const { errors } = require('celebrate');
-const rateLimit = require('express-rate-limit');
 const { cors } = require('./middlewares/cors');
+const { limiter } = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const error = require('./middlewares/error');
 const {
   login,
   createUser,
-  signout,
 } = require('./controllers/users');
-const usersRouter = require('./routes/users');
-const moviesRouter = require('./routes/movies');
+
 const auth = require('./middlewares/auth');
 const {
   signupValidation,
   signinValidation,
 } = require('./middlewares/validations');
+
+const { PORT = 3000, NODE_ENV, DB_SERVER } = process.env;
+const { DB_DEV_SERVER } = require('./utils/db-config');
+const {
+  MSG_PAGE_NOT_FOUND,
+  MSG_SERVER_WILL_FALL,
+} = require('./utils/constants');
+const router = require('./routes/index');
 const NotFoundError = require('./errors/not-found-error');
 
-const { PORT = 3000 } = process.env;
 const app = express();
 app.use(cors);
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
+app.use(helmet());
+app.disable('x-powered-by');
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -39,7 +41,7 @@ app.use(requestLogger); // подключаем логгер запросов
 app.use(limiter);
 app.get('/crash-test', () => {
   setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
+    throw new Error(MSG_SERVER_WILL_FALL);
   }, 0);
 });
 
@@ -50,13 +52,11 @@ app.post('/signin', signinValidation, login);
 
 // авторизация
 app.use(auth);
-app.use('/users', usersRouter);
-app.use('/movies', moviesRouter);
-app.post('/signout', signout);
-app.use('/*', (req, res, next) => next(new NotFoundError('Страница не найдена')));
+app.use('/', router);
+app.use('/*', (req, res, next) => next(new NotFoundError(MSG_PAGE_NOT_FOUND)));
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmdb', {});
+mongoose.connect((NODE_ENV === 'production' ? DB_SERVER : DB_DEV_SERVER), {});
 
 app.use(errorLogger); // подключаем логгер ошибок
 
@@ -64,17 +64,6 @@ app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // обработчик ошибок celebrate
 
 // Мидлвар централизованной обработки ошибок
-app.use((err, req, res, next) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next();
-});
+app.use(error);
+
 app.listen(PORT);
