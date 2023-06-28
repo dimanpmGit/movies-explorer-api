@@ -96,7 +96,7 @@ const signout = (req, res, next) => {
         return Promise.reject(new AuthError(MSG_USER_WRONG_MAIL_OR_PSSWD));
       }
       res.clearCookie('jwt');
-      return res.send(MSG_GOODBYE);
+      return res.send({ message: MSG_GOODBYE });
     })
     .catch(next);
 };
