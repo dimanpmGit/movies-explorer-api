@@ -27,7 +27,7 @@
 
 ## Ссылки на проект
 
-IP 51.250.20.35
+IP 84.252.143.40
 
 Frontend https://movies.dimanpm.nomoreparties.sbs
 
