@@ -22,7 +22,7 @@ const {
 } = require('./middlewares/validations');
 
 const { PORT = 3000, NODE_ENV, DB_SERVER } = process.env;
-console.log(process.env.NODE_ENV);
+
 const { DB_DEV_SERVER } = require('./utils/db-config');
 const {
   MSG_PAGE_NOT_FOUND,
@@ -57,7 +57,6 @@ app.use('/', router);
 app.use('/*', (req, res, next) => next(new NotFoundError(MSG_PAGE_NOT_FOUND)));
 
 // подключаемся к серверу mongo
-console.log(NODE_ENV);
 mongoose.connect((NODE_ENV === 'production' ? DB_SERVER : DB_DEV_SERVER), {});
 
 app.use(errorLogger); // подключаем логгер ошибок

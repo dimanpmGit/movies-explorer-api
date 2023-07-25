@@ -2,10 +2,11 @@
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://mesto.dimanpm.nomoredomains.rocks',
-  'http://mesto.dimanpm.nomoredomains.rocks',
+  'https://movies.dimanpm.nomoreparties.sbs',
+  'http://movies.dimanpm.nomoreparties.sbs',
+  'https://api.movies.dimanpm.nomoreparties.sbs',
+  'http://api.movies.dimanpm.nomoreparties.sbs',
   'http://localhost:3000',
-  'http://localhost:3001',
 ];
 
 // eslint-disable-next-line consistent-return
