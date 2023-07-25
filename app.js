@@ -21,8 +21,8 @@ const {
   signinValidation,
 } = require('./middlewares/validations');
 
-console.log(process.env.NODE_ENV);
 const { PORT = 3000, NODE_ENV, DB_SERVER } = process.env;
+console.log(process.env.NODE_ENV);
 const { DB_DEV_SERVER } = require('./utils/db-config');
 const {
   MSG_PAGE_NOT_FOUND,
