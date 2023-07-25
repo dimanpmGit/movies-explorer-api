@@ -7,7 +7,6 @@ const movieSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 2,
-      maxlength: 30,
     },
     director: {
       type: String,
@@ -47,34 +46,24 @@ const movieSchema = new mongoose.Schema(
         message: 'Некорректный url изображения',
       },
     },
-    thumbnail: {
-      type: String,
-      required: true,
-      validate: {
-        validator: (url) => validator.isURL(url),
-        message: 'Некорректный url изображения',
-      },
-    },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
-      required: true,
-    },
-    movieId: {
-      type: Number,
       required: true,
     },
     nameRU: {
       type: String,
       required: true,
       minlength: 2,
-      maxlength: 30,
     },
     nameEN: {
       type: String,
       required: true,
       minlength: 2,
-      maxlength: 30,
+    },
+    likedMovieId: {
+      type: String,
+      required: true,
     },
   },
   { versionKey: false },
