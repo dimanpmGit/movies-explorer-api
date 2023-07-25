@@ -6,7 +6,7 @@ const allowedCors = [
   'http://movies.dimanpm.nomoreparties.sbs',
   'https://api.movies.dimanpm.nomoreparties.sbs',
   'http://api.movies.dimanpm.nomoreparties.sbs',
-  'localhost:3001',
+  'localhost:3000',
 ];
 
 // eslint-disable-next-line consistent-return
