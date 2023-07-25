@@ -4,8 +4,6 @@ const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedCors = [
   'https://movies.dimanpm.nomoreparties.sbs',
   'http://movies.dimanpm.nomoreparties.sbs',
-  'https://api.movies.dimanpm.nomoreparties.sbs',
-  'http://api.movies.dimanpm.nomoreparties.sbs',
   'localhost:3000',
 ];
 
