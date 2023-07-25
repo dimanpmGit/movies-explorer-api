@@ -56,6 +56,7 @@ app.use('/', router);
 app.use('/*', (req, res, next) => next(new NotFoundError(MSG_PAGE_NOT_FOUND)));
 
 // подключаемся к серверу mongo
+console.log(NODE_ENV);
 mongoose.connect((NODE_ENV === 'production' ? DB_SERVER : DB_DEV_SERVER), {});
 
 app.use(errorLogger); // подключаем логгер ошибок
