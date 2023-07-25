@@ -21,7 +21,7 @@ const {
   signinValidation,
 } = require('./middlewares/validations');
 
-const { PORT = 3000, NODE_ENV, DB_SERVER } = process.env;
+const { PORT = 3001, NODE_ENV, DB_SERVER } = process.env;
 
 const { DB_DEV_SERVER } = require('./utils/db-config');
 const {
