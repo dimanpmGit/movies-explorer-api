@@ -16,7 +16,7 @@ const {
   updateProfile,
   signout,
   login,
-  createUser
+  createUser,
 } = require('../controllers/users');
 
 router.post('/signin', login);
