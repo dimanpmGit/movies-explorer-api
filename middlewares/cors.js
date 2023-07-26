@@ -3,7 +3,9 @@ const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
   'https://movies.dimanpm.nomoreparties.sbs',
+  'https://api.movies.dimanpm.nomoreparties.sbs',
   'http://movies.dimanpm.nomoreparties.sbs',
+  'http://api.movies.dimanpm.nomoreparties.sbs',
   'http://localhost:3001',
 ];
 
