@@ -15,12 +15,8 @@ const {
   getCurrentUser,
   updateProfile,
   signout,
-  login,
-  createUser,
 } = require('../controllers/users');
 
-router.post('/signin', login);
-router.post('/signup', createUser);
 router.post('/signout', signout);
 router.get('/movies', getUserMovies);
 router.post('/movies', createMovieValidation, createMovie);
