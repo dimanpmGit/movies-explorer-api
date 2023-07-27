@@ -40,6 +40,8 @@ const updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError(MSG_USER_DUBLICATE));
+      } else if (err.name === 'ValidationError') {
+        next(new ValidationError(MSG_USER_WRONG_DATA));
       } else {
         next(err);
       }
