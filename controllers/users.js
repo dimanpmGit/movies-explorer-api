@@ -37,7 +37,13 @@ const updateProfile = (req, res, next) => {
       }
       return res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError(MSG_USER_DUBLICATE));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const createUser = (req, res, next) => {
