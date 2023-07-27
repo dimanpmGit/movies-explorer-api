@@ -1,5 +1,4 @@
 const { celebrate, Joi } = require('celebrate');
-const { URL_PATTERN } = require('../utils/constants');
 
 const updateProfileValidation = celebrate({
   body: Joi.object().keys({
@@ -16,16 +15,16 @@ const idValidation = celebrate({
 
 const createMovieValidation = celebrate({
   body: Joi.object().keys({
-    country: Joi.string().required().min(2),
-    director: Joi.string().required().min(2).max(30),
-    duration: Joi.number().required(),
-    year: Joi.string().required().min(2).max(4),
-    description: Joi.string().required().min(2).max(3000),
-    image: Joi.string().required().pattern(URL_PATTERN),
-    trailerLink: Joi.string().required().pattern(URL_PATTERN),
+    country: Joi.string(),
+    director: Joi.string(),
+    duration: Joi.number(),
+    year: Joi.string(),
+    description: Joi.string(),
+    image: Joi.string(),
+    trailerLink: Joi.string(),
     owner: Joi.string().length(24).hex().required(),
-    nameRU: Joi.string().required().min(2),
-    nameEN: Joi.string().required().min(2),
+    nameRU: Joi.string().required(),
+    nameEN: Joi.string().required(),
     likedMovieId: Joi.string().required(),
   }),
 });
